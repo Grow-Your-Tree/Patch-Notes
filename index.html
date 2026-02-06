@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patch Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .patch-note {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .patch-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .patch-header h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            flex: 1;
+        }
+
+        .patch-date {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 1.3em;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .change-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .change-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .change-item strong {
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .change-detail {
+            color: #666;
+            margin-left: 15px;
+            margin-top: 5px;
+            line-height: 1.6;
+        }
+
+        .change-detail::before {
+            content: "↳ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .important-note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .important-note strong {
+            color: #856404;
+        }
+
+        .footer-text {
+            margin-top: 15px;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .patch-note {
+                padding: 20px;
+            }
+            
+            .patch-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Patch Notes</h1>
+            <p>Alle Updates und Änderungen im Überblick</p>
+        </header>
+
+        <div id="patchNotes">
+            
+                    <div class="patch-note">
+                        <div class="patch-header">
+                            <h2>Early Access 1.2.1</h2>
+                            <span class="patch-date">2026-02-06</span>
+                        </div>
+
+                        
+                        <div class="section-title">
+                            🛠️ Update
+                        </div>
+                        
+
+                        <ul class="change-list">
+                            
+                                <li class="change-item">
+                                    <strong>• Moved the Discord patch notes to the new website</strong>
+                                    
+                                        <div class="change-detail">Reason: Improved readability on both mobile and desktop</div>
+                                    
+                                </li>
+                            
+                        </ul>
+
+                        
+                            <div class="important-note">
+                                Join Official Discord Server: https://discord.gg/4YkUdKQCda
+                            </div>
+                        
+
+                        
+                    </div>
+                
+                    <div class="patch-note">
+                        <div class="patch-header">
+                            <h2>Early Acess - 1.2.0</h2>
+                            <span class="patch-date">2026-02-05</span>
+                        </div>
+
+                        
+                        <div class="section-title">
+                            🛠️ Fixes, Update & Changes
+                        </div>
+                        
+
+                        <ul class="change-list">
+                            
+                                <li class="change-item">
+                                    <strong>• New Developer Command /maintenance</strong>
+                                    
+                                        <div class="change-detail">Replaces the generic update message with a dedicated maintenance notice that includes an estimated completion time.</div>
+                                    
+                                        <div class="change-detail">Allows me to easily enable or disable maintenance mode, making it more user-friendly and informative for players.</div>
+                                    
+                                </li>
+                            
+                                <li class="change-item">
+                                    <strong>• Fixed & Improved Reminders</strong>
+                                    
+                                        <div class="change-detail">If a user has disabled direct messages, reminders will now automatically be disabled as well.</div>
+                                    
+                                </li>
+                            
+                                <li class="change-item">
+                                    <strong>• Reworked Skill Reset System</strong>
+                                    
+                                        <div class="change-detail">Based on community feedback and a logic issue on my site, players previously had to pay to reset their skill points without receiving any leaf refunds — this has now been changed.</div>
+                                    
+                                        <div class="change-detail">Resetting skill points is now free, and players will receive 75% of their leaves refunded.</div>
+                                    
+                                </li>
+                            
+                        </ul>
+
+                        
+                            <div class="important-note">
+                                Important: Found a bug? do /report, you may get rewarded!
+                            </div>
+                        
+
+                        
+                            <p class="footer-text">Hopefully another Update follows shortly!</p>
+                        
+                    </div>
+                
+        </div>
+    </div>
+</body>
+</html>
