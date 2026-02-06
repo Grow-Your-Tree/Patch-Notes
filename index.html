@@ -35,11 +35,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
         .patch-note {
             background: white;
             border-radius: 12px;
@@ -88,9 +83,6 @@
             color: #333;
             font-size: 1.3em;
             margin: 25px 0 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .change-list {
@@ -170,7 +162,7 @@
             
                     <div class="patch-note">
                         <div class="patch-header">
-                            <h2>Early Access 1.2.1</h2>
+                            <h2>Early Access 1.2.1.0</h2>
                             <span class="patch-date">2026-02-06</span>
                         </div>
 
@@ -202,7 +194,7 @@
                 
                     <div class="patch-note">
                         <div class="patch-header">
-                            <h2>Early Acess - 1.2.0</h2>
+                            <h2>Early Acess - 1.2.0.0</h2>
                             <span class="patch-date">2026-02-05</span>
                         </div>
 
@@ -254,5 +246,9 @@
                 
         </div>
     </div>
+
+    <script id="patchNotesData" type="application/json">
+[{"version":"Early Access 1.2.1.0","date":"2026-02-06","sectionTitle":"🛠️ Update","changes":[{"title":"Moved the Discord patch notes to the new website","details":["Reason: Improved readability on both mobile and desktop"]}],"importantNote":"<a href=\"https://discord.gg/4YkUdKQCda\">Join Official Discord Server</a>","footerText":""},{"version":"Early Acess - 1.2.0.0","date":"2026-02-05","sectionTitle":"🛠️ Fixes, Update & Changes","changes":[{"title":"New Developer Command /maintenance","details":["Replaces the generic update message with a dedicated maintenance notice that includes an estimated completion time.","Allows me to easily enable or disable maintenance mode, making it more user-friendly and informative for players."]},{"title":"Fixed & Improved Reminders","details":["If a user has disabled direct messages, reminders will now automatically be disabled as well."]},{"title":"Reworked Skill Reset System","details":["Based on community feedback and a logic issue on my site, players previously had to pay to reset their skill points without receiving any leaf refunds — this has now been changed.","Resetting skill points is now free, and players will receive 75% of their leaves refunded."]}],"importantNote":"Important: Found a bug? do /report, you may get rewarded!","footerText":"Hopefully another Update follows shortly!"}]
+    </script>
 </body>
 </html>
