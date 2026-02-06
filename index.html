@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patch Notes</title>
     <style>
+        :root {
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --header-color: white;
+            --card-bg: white;
+            --card-shadow: rgba(0,0,0,0.2);
+            --primary-color: #667eea;
+            --text-color: #333;
+            --text-muted: #666;
+            --border-color: #f0f0f0;
+            --item-bg: #f8f9fa;
+            --note-bg: #fff3cd;
+            --note-border: #ffc107;
+            --note-text: #856404;
+        }
+
+        body.dark-mode {
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+            --header-color: #e0e0e0;
+            --card-bg: #2a2a3e;
+            --card-shadow: rgba(0,0,0,0.5);
+            --primary-color: #8b9ff5;
+            --text-color: #e0e0e0;
+            --text-muted: #b0b0b0;
+            --border-color: #3a3a4e;
+            --item-bg: #1f1f2e;
+            --note-bg: #3a3420;
+            --note-border: #ffc107;
+            --note-text: #ffd966;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,9 +45,10 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.3s ease;
         }
 
         .container {
@@ -25,8 +58,9 @@
 
         header {
             text-align: center;
-            color: white;
+            color: var(--header-color);
             margin-bottom: 40px;
+            position: relative;
         }
 
         header h1 {
@@ -35,13 +69,34 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px var(--card-shadow);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
         .patch-note {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px var(--card-shadow);
             animation: slideIn 0.5s ease-out;
+            transition: all 0.3s ease;
         }
 
         @keyframes slideIn {
@@ -61,17 +116,17 @@
             gap: 15px;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid var(--border-color);
         }
 
         .patch-header h2 {
-            color: #667eea;
+            color: var(--primary-color);
             font-size: 1.8em;
             flex: 1;
         }
 
         .patch-date {
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
             padding: 8px 16px;
             border-radius: 20px;
@@ -80,7 +135,7 @@
         }
 
         .section-title {
-            color: #333;
+            color: var(--text-color);
             font-size: 1.3em;
             margin: 25px 0 15px 0;
         }
@@ -91,22 +146,22 @@
         }
 
         .change-item {
-            background: #f8f9fa;
+            background: var(--item-bg);
             padding: 15px;
             margin-bottom: 12px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--primary-color);
         }
 
         .change-item strong {
-            color: #333;
+            color: var(--text-color);
             display: block;
             margin-bottom: 8px;
             font-size: 1.05em;
         }
 
         .change-detail {
-            color: #666;
+            color: var(--text-muted);
             margin-left: 15px;
             margin-top: 5px;
             line-height: 1.6;
@@ -114,25 +169,25 @@
 
         .change-detail::before {
             content: "↳ ";
-            color: #667eea;
+            color: var(--primary-color);
             font-weight: bold;
         }
 
         .important-note {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background: var(--note-bg);
+            border-left: 4px solid var(--note-border);
             padding: 15px;
             margin-top: 20px;
             border-radius: 8px;
         }
 
         .important-note strong {
-            color: #856404;
+            color: var(--note-text);
         }
 
         .footer-text {
             margin-top: 15px;
-            color: #666;
+            color: var(--text-muted);
             font-style: italic;
         }
 
@@ -149,10 +204,22 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            .dark-mode-toggle {
+                top: 10px;
+                right: 10px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3em;
+            }
         }
     </style>
 </head>
 <body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+        🌙
+    </button>
+
     <div class="container">
         <header>
             <h1>📋 Patch Notes</h1>
@@ -162,13 +229,39 @@
             
                     <div class="patch-note">
                         <div class="patch-header">
-                            <h2>Early Access 1.2.1.0</h2>
+                            <h2>Early Access 0.1.2.0</h2>
                             <span class="patch-date">2026-02-06</span>
                         </div>
 
                         
                         <div class="section-title">
-                            🛠️ Update
+                            🛠️ Minor Update
+                        </div>
+                        
+
+                        <ul class="change-list">
+                            
+                                <li class="change-item">
+                                    <strong>• Added Dark Mode to the Patch Notes Website</strong>
+                                    
+                                </li>
+                            
+                        </ul>
+
+                        
+
+                        
+                    </div>
+                
+                    <div class="patch-note">
+                        <div class="patch-header">
+                            <h2>Early Access 0.1.1.0</h2>
+                            <span class="patch-date">2026-02-06</span>
+                        </div>
+
+                        
+                        <div class="section-title">
+                            🛠️ Minor Update
                         </div>
                         
 
@@ -194,7 +287,7 @@
                 
                     <div class="patch-note">
                         <div class="patch-header">
-                            <h2>Early Acess - 1.2.0.0</h2>
+                            <h2>Early Acess - 0.1.0.0</h2>
                             <span class="patch-date">2026-02-05</span>
                         </div>
 
@@ -244,11 +337,57 @@
                         
                     </div>
                 
+                    <div class="patch-note">
+                        <div class="patch-header">
+                            <h2>Discord Patch Notes</h2>
+                            <span class="patch-date">INFO</span>
+                        </div>
+
+                        
+
+                        <ul class="change-list">
+                            
+                        </ul>
+
+                        
+                            <div class="important-note">
+                                You can find previous patch notes on the official Discord server. Version numbers start from here.
+<a href="https://discord.gg/4YkUdKQCda">Join the Official Discord Server</a>
+                            </div>
+                        
+
+                        
+                    </div>
+                
         </div>
     </div>
 
     <script id="patchNotesData" type="application/json">
-[{"version":"Early Access 1.2.1.0","date":"2026-02-06","sectionTitle":"🛠️ Update","changes":[{"title":"Moved the Discord patch notes to the new website","details":["Reason: Improved readability on both mobile and desktop"]}],"importantNote":"<a href=\"https://discord.gg/4YkUdKQCda\">Join Official Discord Server</a>","footerText":""},{"version":"Early Acess - 1.2.0.0","date":"2026-02-05","sectionTitle":"🛠️ Fixes, Update & Changes","changes":[{"title":"New Developer Command /maintenance","details":["Replaces the generic update message with a dedicated maintenance notice that includes an estimated completion time.","Allows me to easily enable or disable maintenance mode, making it more user-friendly and informative for players."]},{"title":"Fixed & Improved Reminders","details":["If a user has disabled direct messages, reminders will now automatically be disabled as well."]},{"title":"Reworked Skill Reset System","details":["Based on community feedback and a logic issue on my site, players previously had to pay to reset their skill points without receiving any leaf refunds — this has now been changed.","Resetting skill points is now free, and players will receive 75% of their leaves refunded."]}],"importantNote":"Important: Found a bug? do /report, you may get rewarded!","footerText":"Hopefully another Update follows shortly!"}]
+[{"version":"Early Access 0.1.2.0","date":"2026-02-06","sectionTitle":"🛠️ Minor Update","changes":[{"title":"Added Dark Mode to the Patch Notes Website","details":[]}],"importantNote":"","footerText":""},{"version":"Early Access 0.1.1.0","date":"2026-02-06","sectionTitle":"🛠️ Minor Update","changes":[{"title":"Moved the Discord patch notes to the new website","details":["Reason: Improved readability on both mobile and desktop"]}],"importantNote":"<a href=\"https://discord.gg/4YkUdKQCda\">Join Official Discord Server</a>","footerText":""},{"version":"Early Acess - 0.1.0.0","date":"2026-02-05","sectionTitle":"🛠️ Fixes, Update & Changes","changes":[{"title":"New Developer Command /maintenance","details":["Replaces the generic update message with a dedicated maintenance notice that includes an estimated completion time.","Allows me to easily enable or disable maintenance mode, making it more user-friendly and informative for players."]},{"title":"Fixed & Improved Reminders","details":["If a user has disabled direct messages, reminders will now automatically be disabled as well."]},{"title":"Reworked Skill Reset System","details":["Based on community feedback and a logic issue on my site, players previously had to pay to reset their skill points without receiving any leaf refunds — this has now been changed.","Resetting skill points is now free, and players will receive 75% of their leaves refunded."]}],"importantNote":"Important: Found a bug? do /report, you may get rewarded!","footerText":"Hopefully another Update follows shortly!"},{"version":"Discord Patch Notes","date":"INFO","sectionTitle":"","changes":[],"importantNote":"You can find previous patch notes on the official Discord server. Version numbers start from here.\n<a href=\"https://discord.gg/4YkUdKQCda\">Join the Official Discord Server</a>","footerText":""}]
+    </script>
+
+    <script>
+        // Dark mode functionality
+        function toggleDarkMode() {
+            const body = document.body;
+            const button = document.querySelector('.dark-mode-toggle');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                button.textContent = '☀️';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                button.textContent = '🌙';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.dark-mode-toggle').textContent = '☀️';
+        }
     </script>
 </body>
 </html>
