@@ -4,51 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Changelogs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-gradient-start: #667eea;
-            --bg-gradient-end: #764ba2;
-            --header-color: white;
-            --card-bg: white;
-            --card-shadow: rgba(0,0,0,0.2);
-            --primary-color: #667eea;
-            --text-color: #333;
-            --text-muted: #666;
-            --border-color: #f0f0f0;
-            --item-bg: #f8f9fa;
-            --note-bg: #fff3cd;
-            --note-border: #ffc107;
-            --note-text: #856404;
-        }
-
-        body.dark-mode {
-            --bg-gradient-start: #1a1a2e;
-            --bg-gradient-end: #16213e;
-            --header-color: #e0e0e0;
-            --card-bg: #2a2a3e;
-            --card-shadow: rgba(0,0,0,0.5);
-            --primary-color: #8b9ff5;
-            --text-color: #e0e0e0;
-            --text-muted: #b0b0b0;
-            --border-color: #3a3a4e;
-            --item-bg: #1f1f2e;
-            --note-bg: #3a3420;
-            --note-border: #ffc107;
-            --note-text: #ffd966;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            background: #030810;
             min-height: 100vh;
-            padding: 20px;
-            transition: background 0.3s ease;
+            padding: 0;
+            overflow-x: hidden;
+            color: #c8d8f0;
+        }
+
+        /* ── Sky canvas ── */
+        #sky {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Moon ── */
+        .moon {
+            position: fixed;
+            top: 50px;
+            right: 70px;
+            width: 60px;
+            height: 60px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* ── Fog ── */
+        .fog-layer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 160px;
+            background: linear-gradient(to top, rgba(20,50,30,0.5) 0%, rgba(20,50,30,0.15) 50%, transparent 100%);
+            animation: fogDrift 40s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .fog-layer.fog2 { animation-delay: -20s; opacity: 0.5; }
+        @keyframes fogDrift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ── Treeline ── */
+        #treeline {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* ── Firefly ── */
+        .firefly {
+            position: fixed;
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: #aaff88;
+            box-shadow: 0 0 6px #aaff88, 0 0 12px rgba(170,255,136,0.5);
+            pointer-events: none;
+            z-index: 4;
+            opacity: 0;
+        }
+
+        /* ── Content ── */
+        .page-wrap {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding: 48px 20px 200px;
         }
 
         .container {
@@ -58,56 +88,77 @@
 
         header {
             text-align: center;
-            color: var(--header-color);
-            margin-bottom: 40px;
-            position: relative;
+            margin-bottom: 48px;
+        }
+
+        .header-eyebrow {
+            font-family: 'Cinzel', serif;
+            font-size: 0.68em;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #a8873a;
+            margin-bottom: 10px;
         }
 
         header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2em, 5vw, 3.2em);
+            font-weight: 700;
+            color: #f4c842;
+            text-shadow: 0 0 40px rgba(244,200,66,0.4), 0 0 80px rgba(244,200,66,0.15);
+            letter-spacing: 0.06em;
         }
 
-        .dark-mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5em;
-            box-shadow: 0 5px 15px var(--card-shadow);
-            transition: all 0.3s ease;
-            z-index: 1000;
+        header p {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 1.1em;
+            color: #5a7090;
+            margin-top: 8px;
+            font-style: italic;
+            font-weight: 300;
         }
 
-        .dark-mode-toggle:hover {
-            transform: scale(1.1);
+        .header-divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #a8873a, transparent);
+            margin: 18px auto 0;
         }
 
+        /* ── Cards ── */
         .patch-note {
-            background: var(--card-bg);
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(10,22,40,0.88) 0%, rgba(6,13,26,0.92) 100%);
+            border: 1px solid rgba(100,140,200,0.12);
+            border-radius: 6px;
             padding: 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px var(--card-shadow);
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             animation: slideIn 0.5s ease-out;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
         }
+
+        .patch-note::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(244,200,66,0.06), transparent 65%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .patch-note:hover {
+            border-color: rgba(244,200,66,0.25);
+            box-shadow: 0 0 40px rgba(244,200,66,0.06), 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .patch-note:hover::before { opacity: 1; }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .patch-header {
@@ -116,156 +167,245 @@
             gap: 15px;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 1px solid rgba(100,140,200,0.15);
         }
 
         .patch-header h2 {
-            color: var(--primary-color);
-            font-size: 1.8em;
+            font-family: 'Cinzel', serif;
+            color: #f4c842;
+            font-size: 1.6em;
             flex: 1;
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(244,200,66,0.3);
         }
 
         .patch-date {
-            background: var(--primary-color);
-            color: white;
-            padding: 8px 16px;
+            background: rgba(244,200,66,0.15);
+            color: #f4c842;
+            border: 1px solid rgba(244,200,66,0.3);
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.9em;
+            font-size: 0.85em;
             font-weight: 600;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
         }
 
         .section-title {
-            color: var(--text-color);
-            font-size: 1.3em;
-            margin: 25px 0 15px 0;
+            color: #c8d8f0;
+            font-size: 1.2em;
+            margin: 20px 0 14px 0;
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            letter-spacing: 0.05em;
         }
 
-        .change-list {
-            list-style: none;
-            margin-left: 0;
-        }
+        .change-list { list-style: none; }
 
         .change-item {
-            background: var(--item-bg);
-            padding: 15px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-color);
+            background: rgba(255,255,255,0.04);
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #f4c842;
         }
 
         .change-item strong {
-            color: var(--text-color);
+            color: #c8d8f0;
             display: block;
-            margin-bottom: 8px;
-            font-size: 1.05em;
+            margin-bottom: 6px;
+            font-size: 1em;
         }
 
         .change-detail {
-            color: var(--text-muted);
-            margin-left: 15px;
-            margin-top: 5px;
+            color: #5a7090;
+            margin-left: 14px;
+            margin-top: 4px;
             line-height: 1.6;
+            font-size: 0.95em;
         }
 
         .change-detail::before {
             content: "↳ ";
-            color: var(--primary-color);
+            color: #f4c842;
             font-weight: bold;
         }
 
         .sub-changes {
-            margin-top: 12px;
-            margin-left: 10px;
-            padding-left: 15px;
+            margin-top: 10px;
+            margin-left: 8px;
+            padding-left: 12px;
         }
 
         .sub-change-item {
-            background: var(--card-bg);
+            background: rgba(0,0,0,0.2);
             padding: 10px;
             margin-bottom: 8px;
-            border-radius: 6px;
-            border-left: 3px solid #764ba2;
+            border-radius: 5px;
+            border-left: 2px solid #764ba2;
         }
 
         .sub-change-item strong {
-            color: #764ba2;
-            font-size: 0.95em;
-        }
-
-        body.dark-mode .sub-change-item strong {
             color: #b39ddb;
+            font-size: 0.93em;
         }
 
         .sub-change-detail {
-            color: var(--text-muted);
-            margin-left: 10px;
+            color: #5a7090;
+            margin-left: 8px;
             margin-top: 3px;
             line-height: 1.5;
-            font-size: 0.95em;
+            font-size: 0.92em;
         }
 
         .sub-change-detail::before {
             content: "→ ";
-            color: #764ba2;
+            color: #b39ddb;
             font-weight: bold;
         }
 
-        body.dark-mode .sub-change-detail::before {
-            color: #b39ddb;
-        }
-
         .important-note {
-            background: var(--note-bg);
-            border-left: 4px solid var(--note-border);
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 8px;
-        }
-
-        .important-note strong {
-            color: var(--note-text);
+            background: rgba(255,193,7,0.08);
+            border-left: 3px solid #ffc107;
+            padding: 14px;
+            margin-top: 18px;
+            border-radius: 6px;
+            color: #ffd966;
         }
 
         .footer-text {
-            margin-top: 15px;
-            color: var(--text-muted);
+            margin-top: 14px;
+            color: #5a7090;
             font-style: italic;
+            font-size: 0.93em;
         }
 
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2em;
-            }
-            
-            .patch-note {
-                padding: 20px;
-            }
-            
-            .patch-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        /* ── Theme toggle button ── */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(10,22,40,0.85);
+            border: 1px solid rgba(244,200,66,0.25);
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
 
-            .dark-mode-toggle {
-                top: 10px;
-                right: 10px;
-                width: 45px;
-                height: 45px;
-                font-size: 1.3em;
-            }
+        /* ── DAY theme overrides ── */
+        body.day .patch-note {
+            background: linear-gradient(135deg, rgba(255,252,240,0.92) 0%, rgba(255,248,228,0.95) 100%);
+            border-color: rgba(180,140,60,0.2);
+            box-shadow: 0 8px 30px rgba(100,80,20,0.12);
+            color: #3a2e10;
+        }
+        body.day .patch-note:hover { border-color: rgba(180,140,60,0.45); }
+        body.day .patch-note::before { background: radial-gradient(ellipse at 50% 0%, rgba(255,200,60,0.12), transparent 65%); }
+        body.day .patch-header { border-bottom-color: rgba(180,140,60,0.2); }
+        body.day .patch-header h2 { color: #b06000; text-shadow: none; }
+        body.day .patch-date { background: rgba(180,120,0,0.12); color: #8a5000; border-color: rgba(180,120,0,0.3); }
+        body.day .header-eyebrow { color: #9a7020; }
+        body.day header h1 { color: #c07010; text-shadow: 0 0 30px rgba(220,140,0,0.3); }
+        body.day header p { color: #9a8060; }
+        body.day .header-divider { background: linear-gradient(to right, transparent, #c09030, transparent); }
+        body.day .section-title { color: #3a2e10; }
+        body.day .change-item { background: rgba(180,140,60,0.06); border-left-color: #c07010; }
+        body.day .change-item strong { color: #2a2010; }
+        body.day .change-detail { color: #7a6040; }
+        body.day .change-detail::before { color: #c07010; }
+        body.day .sub-change-item { background: rgba(0,0,0,0.04); border-left-color: #9060b0; }
+        body.day .sub-change-item strong { color: #6040a0; }
+        body.day .sub-change-detail { color: #7a6040; }
+        body.day .sub-change-detail::before { color: #9060b0; }
+        body.day .important-note { background: rgba(255,193,7,0.15); color: #7a5000; }
+        body.day .footer-text { color: #9a8060; }
+        body.day .theme-toggle { background: rgba(255,248,228,0.9); border-color: rgba(180,130,0,0.3); }
+
+        /* ── DUSK theme overrides ── */
+        body.dusk .patch-note {
+            background: linear-gradient(135deg, rgba(30,15,25,0.9) 0%, rgba(20,10,30,0.93) 100%);
+            border-color: rgba(255,120,60,0.15);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+        body.dusk .patch-note:hover { border-color: rgba(255,120,60,0.35); }
+        body.dusk .patch-note::before { background: radial-gradient(ellipse at 50% 0%, rgba(255,100,40,0.08), transparent 65%); }
+        body.dusk .patch-header { border-bottom-color: rgba(255,120,60,0.15); }
+        body.dusk .patch-header h2 { color: #ff9050; text-shadow: 0 0 20px rgba(255,100,40,0.3); }
+        body.dusk .patch-date { background: rgba(255,100,40,0.12); color: #ff8040; border-color: rgba(255,100,40,0.3); }
+        body.dusk .header-eyebrow { color: #c06030; }
+        body.dusk header h1 { color: #ff8040; text-shadow: 0 0 40px rgba(255,100,40,0.4); }
+        body.dusk .header-divider { background: linear-gradient(to right, transparent, #c06030, transparent); }
+        body.dusk .change-item { border-left-color: #ff8040; }
+        body.dusk .change-detail::before { color: #ff8040; }
+        body.dusk .theme-toggle { border-color: rgba(255,100,40,0.25); }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            .patch-note { padding: 20px; }
+            .patch-header { flex-direction: column; align-items: flex-start; }
+            .theme-toggle { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 1.1em; }
         }
     </style>
 </head>
 <body>
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
-        🌙
-    </button>
 
+<canvas id="sky"></canvas>
+
+<!-- Moon (night) / Sun (day) / Setting sun (dusk) -->
+<svg id="celestial" style="position:fixed;top:50px;right:70px;width:64px;height:64px;z-index:2;pointer-events:none;" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Night moon -->
+    <g id="cel-night">
+        <defs><radialGradient id="mG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(244,220,150,0.12)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs>
+        <circle cx="32" cy="32" r="30" fill="url(#mG)"/>
+        <circle cx="32" cy="32" r="18" fill="#f0e8c8" opacity="0.88"/>
+        <circle cx="40" cy="26" r="18" fill="#030810"/>
+    </g>
+    <!-- Day sun -->
+    <g id="cel-day" style="display:none">
+        <defs><radialGradient id="sG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(255,220,80,0.5)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs>
+        <circle cx="32" cy="32" r="30" fill="url(#sG)"/>
+        <circle cx="32" cy="32" r="16" fill="#ffe060" opacity="0.95"/>
+        <circle cx="32" cy="32" r="12" fill="#fff0a0"/>
+    </g>
+    <!-- Dusk sun -->
+    <g id="cel-dusk" style="display:none">
+        <defs><radialGradient id="dG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(255,120,40,0.5)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs>
+        <circle cx="32" cy="32" r="30" fill="url(#dG)"/>
+        <circle cx="32" cy="32" r="16" fill="#ff8030" opacity="0.95"/>
+        <circle cx="32" cy="32" r="10" fill="#ffb060"/>
+    </g>
+</svg>
+
+<div class="fog-layer"></div>
+<div class="fog-layer fog2"></div>
+
+<svg id="treeline" viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="treeGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0f2614"/>
+            <stop offset="100%" stop-color="#030810"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#treeGrad)" id="treePath" d="M0,200 L0,140 L15,140 L15,100 L8,100 L22,60 L15,60 L30,20 L45,60 L38,60 L52,100 L45,100 L45,140 L60,140 L60,110 L52,110 L68,70 L60,70 L78,30 L96,70 L88,70 L104,110 L96,110 L96,140 L115,140 L115,120 L108,120 L120,85 L132,120 L125,120 L125,140 L145,140 L145,95 L136,95 L152,45 L142,45 L162,0 L182,45 L172,45 L188,95 L179,95 L179,140 L200,140 L200,115 L192,115 L205,80 L218,115 L210,115 L210,140 L230,140 L230,100 L222,100 L238,55 L228,55 L248,10 L268,55 L258,55 L274,100 L266,100 L266,140 L285,140 L285,125 L278,125 L290,95 L302,125 L295,125 L295,140 L315,140 L315,105 L307,105 L322,65 L312,65 L330,18 L348,65 L338,65 L353,105 L345,105 L345,140 L368,140 L368,118 L360,118 L374,85 L388,118 L380,118 L380,140 L400,140 L400,98 L392,98 L408,52 L398,52 L418,5 L438,52 L428,52 L444,98 L436,98 L436,140 L458,140 L458,122 L450,122 L464,90 L478,122 L470,122 L470,140 L492,140 L492,108 L484,108 L500,62 L490,62 L510,15 L530,62 L520,62 L536,108 L528,108 L528,140 L550,140 L550,128 L543,128 L555,100 L567,128 L560,128 L560,140 L580,140 L580,102 L572,102 L588,55 L578,55 L598,8 L618,55 L608,55 L624,102 L616,102 L616,140 L638,140 L638,120 L630,120 L644,86 L658,120 L650,120 L650,140 L672,140 L672,96 L664,96 L680,48 L670,48 L690,2 L710,48 L700,48 L716,96 L708,96 L708,140 L730,140 L730,115 L722,115 L736,82 L750,115 L742,115 L742,140 L762,140 L762,105 L754,105 L770,58 L760,58 L780,12 L800,58 L790,58 L806,105 L798,105 L798,140 L820,140 L820,122 L812,122 L826,92 L840,122 L832,122 L832,140 L852,140 L852,100 L844,100 L860,52 L850,52 L870,6 L890,52 L880,52 L896,100 L888,100 L888,140 L910,140 L910,118 L902,118 L916,85 L930,118 L922,118 L922,140 L945,140 L945,108 L937,108 L953,60 L943,60 L963,14 L983,60 L973,60 L989,108 L981,108 L981,140 L1003,140 L1003,125 L996,125 L1008,96 L1020,125 L1013,125 L1013,140 L1033,140 L1033,102 L1025,102 L1041,55 L1031,55 L1051,8 L1071,55 L1061,55 L1077,102 L1069,102 L1069,140 L1090,140 L1090,120 L1082,120 L1096,88 L1110,120 L1102,120 L1102,140 L1122,140 L1122,98 L1114,98 L1130,50 L1120,50 L1140,4 L1160,50 L1150,50 L1166,98 L1158,98 L1158,140 L1180,140 L1180,115 L1172,115 L1186,83 L1200,115 L1192,115 L1192,140 L1212,140 L1212,105 L1204,105 L1220,58 L1210,58 L1230,12 L1250,58 L1240,58 L1256,105 L1248,105 L1248,140 L1268,140 L1268,120 L1260,120 L1274,88 L1288,120 L1280,120 L1280,140 L1300,140 L1300,100 L1292,100 L1308,52 L1298,52 L1318,6 L1338,52 L1328,52 L1344,100 L1336,100 L1336,140 L1358,140 L1358,118 L1350,118 L1364,85 L1378,118 L1370,118 L1370,140 L1390,140 L1390,108 L1382,108 L1398,62 L1388,62 L1408,16 L1428,62 L1418,62 L1434,108 L1426,108 L1426,140 L1440,140 L1440,200 Z"/>
+</svg>
+
+<button class="theme-toggle" id="themeBtn" onclick="cycleTheme()" aria-label="Toggle theme">🌙</button>
+
+<div class="page-wrap">
     <div class="container">
         <header>
+            <div class="header-eyebrow" id="eyebrow">The Ancient Grove</div>
             <h1>📋 Changelogs</h1>
+            <p id="tagline">A record of all that has changed beneath these stars</p>
+            <div class="header-divider"></div>
         </header>
-
         <div id="changelogs">
             
                     <div class="patch-note">
@@ -752,33 +892,142 @@
                 
         </div>
     </div>
+</div>
 
-    <script id="changelogsData" type="application/json">
+<script id="changelogsData" type="application/json">
 [{"version":"Early Access 0.2.1.4","date":"2026-03-17","sectionTitle":"🛠️Minor Change","changes":[{"title":"Removed","details":["Stock Market button. There are no plans to bring this feature back."],"subChanges":[]},{"title":"Added","details":["Changelog button for easier access to updates."],"subChanges":[]}],"importantNote":"","footerText":""},{"version":"Early Access 0.2.1.3","date":"2026-03-17","sectionTitle":"🛠️Hot Fix","changes":[{"title":"Bug Fix","details":["Fixed an issue where common loot boxes were granting higher rewards and drop rates than intended."],"subChanges":[]}],"importantNote":"","footerText":""},{"version":"Early Access 0.2.1.2","date":"2026-03-08","sectionTitle":"🛠️Minor Change","changes":[{"title":"Removed","details":["Removed coins from the main page. While the issues were fixable, the feature wasn’t necessary."],"subChanges":[]}],"importantNote":"","footerText":"Corrected the 0.2.1.1 changelog."},{"version":"Early Access 0.2.1.1","date":"2026-03-08","sectionTitle":"🛠️Minor Patch","changes":[{"title":"Bug Fixes","details":["Fixed an issue where the Tree image appeared outside the embed.","Fixed an issue where reminders were not deactivated if the bot could not send a direct message to the user."],"subChanges":[]},{"title":"Improvements / Changes","details":["Added additional information to the Shop, including Coins, Leaves.","Coins are now also shown on the main page.","Membership Lootbox rewards now show their actual icons instead of the generic 🎁 icon.","Renamed “Patch Notes” → “Changelogs” to better reflect the purpose of the updates."],"subChanges":[]}],"importantNote":"","footerText":"Pssst... <a href=\"https://ko-fi.com/growyourtree/tiers\" target=\"_blank\">Memberships</a>"},{"version":"Early Access 0.2.0.1","date":"2026-03-06","sectionTitle":"🛠️Balance Change","changes":[{"title":"Palm Tree Skin","details":["Leaf price change 105.210 -> 128.210"],"subChanges":[]}],"importantNote":"Apologies for the delayed posting of the patch notes. Don’t forget to support the developer by getting a <a href=\"https://ko-fi.com/growyourtree/tiers\" target=\"_blank\">membership</a> and <a href=\"https://discord.gg/4YkUdKQCda\" target=\"_blank\">join our official Discord server</a>!","footerText":""},{"version":"Early Access - 0.2.0.0","date":"2026-03-05","sectionTitle":"🚀Update","changes":[{"title":"Shop Release!","details":["Tree Skins (Background etc. will follow)","Items (Planned for the next Update)","Pets - Comming soon"],"subChanges":[]},{"title":"Max Level Increase 39 -> 44","details":["Max Level Increase supports the following skins: Sheep,Birch,Palm.","Improved roots graphics for Levels 35–39."],"subChanges":[]},{"title":"Upgrade Page","details":["Now displays when each upgrade unlocks and when the maximum level increases."],"subChanges":[]},{"title":"Reminder System","details":["Improved Database Performance"],"subChanges":[{"title":"New Reminder","details":["Allow yourself to be reminded when you can vote again"]}]}],"importantNote":"Apologies for the delayed posting of the patch notes. Don’t forget to support the developer by getting a <a href=\"https://ko-fi.com/growyourtree/tiers\" target=\"_blank\">membership</a> and <a href=\"https://discord.gg/4YkUdKQCda\" target=\"_blank\">join our official Discord server</a>!","footerText":""},{"version":"Early Access - 0.1.4.0","date":"2026-02-10","sectionTitle":"🛠️ Minor Patch","changes":[{"title":"Search System Update","details":["Code improvements for search system","You now earn XP for claiming searches! Upgrades affect XP gain, but do not affect leaf gain.","Leave Boost and XP Boost from memberships now apply to search rewards"]}],"importantNote":"Thank you all for the feedback. <a href=\"https://discord.gg/4YkUdKQCda\" target=\"_blank\">Join our official Discord server</a>!","footerText":""},{"version":"Early Access - 0.1.3.0","date":"2026-02-09","sectionTitle":"🛡️ Patch","changes":[{"title":"Database Optimization & Security","details":["Your data is now backed up automaticly every day (last 7 days kept safe)","Database cleanup and optimization (removed old unused features to save space and improve performance)"]},{"title":"New Benefit for Memberships","details":["Subsurface Chain Chance Increased by certain %"]},{"title":"Skin Display Fix","details":["Fixed a bug where tree skins didn’t show correctly — they now display properly as intended.","Note: Skins are currently limited and can only be granted by the developer."]}],"importantNote":"Explore <a href=\"https://ko-fi.com/growyourtree/tiers\" target=\"_blank\">all memberships and benefits</a>, and <a href=\"https://discord.gg/4YkUdKQCda\" target=\"_blank\">join our official Discord server</a>!","footerText":"The next update is planned to finally launch the shop. It might take a little while, and many features will still be missing, but you may already be able to purchase and use some items, as well as tree skins."},{"version":"Early Access - 0.1.2.0","date":"2026-02-06","sectionTitle":"🛠️ Minor Patch","changes":[{"title":"Added Dark Mode to the Patch Notes Website","details":["Not mentioned in the Discord patch notes, as the change is not relevant enough."]}],"importantNote":"","footerText":""},{"version":"Early Access - 0.1.1.0","date":"2026-02-06","sectionTitle":"🛠️ Minor Patch","changes":[{"title":"Moved the Discord patch notes to the new website","details":["Reason: Improved readability on both mobile and desktop"]}],"importantNote":"<a href=\"https://discord.gg/4YkUdKQCda\">Join the Official Discord Server</a>","footerText":""},{"version":"Early Access - 0.1.0.0","date":"2026-02-05","sectionTitle":"🛠️ Minor Update","changes":[{"title":"New Developer Command /maintenance","details":["Replaces the generic update message with a dedicated maintenance notice that includes an estimated completion time.","Allows me to easily enable or disable maintenance mode, making it more user-friendly and informative for players."]},{"title":"Fixed & Improved Reminders","details":["If a user has disabled direct messages, reminders will now automatically be disabled as well."]},{"title":"Reworked Skill Reset System","details":["Based on community feedback and a logic issue on my site, players previously had to pay to reset their skill points without receiving any leaf refunds — this has now been changed.","Resetting skill points is now free, and players will receive 75% of their leaves refunded."]}],"importantNote":"Important: Found a bug? do /report, you may get rewarded!","footerText":"Hopefully another Update follows shortly!"},{"version":"Discord Patch Notes","date":"INFO","sectionTitle":"","changes":[],"importantNote":"You can find previous patch notes on the official Discord server. Version numbers start from here.\n<a href=\"https://discord.gg/4YkUdKQCda\">Join the Official Discord Server</a>","footerText":""}]
-    </script>
+</script>
 
-    <script>
-        // Dark mode functionality
-        function toggleDarkMode() {
-            const body = document.body;
-            const button = document.querySelector('.dark-mode-toggle');
-            
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                button.textContent = '☀️';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                button.textContent = '🌙';
-                localStorage.setItem('darkMode', 'disabled');
+<script>
+    // ── Canvas sky ──
+    const canvas = document.getElementById('sky');
+    const ctx = canvas.getContext('2d');
+    let W, H, stars = [], currentTheme = 'night';
+
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    function initStars() {
+        stars = [];
+        for (let i = 0; i < 260; i++) stars.push({ x: Math.random()*W, y: Math.random()*H*0.75, r: Math.random()*1.2+0.2, a: Math.random(), speed: Math.random()*0.004+0.001, phase: Math.random()*Math.PI*2 });
+    }
+
+    const skyPalettes = {
+        night: [['#020609','#040c18','#0a1a0d'], true],
+        day:   [['#5ab0e8','#8acff0','#3a8040'], false],
+        dusk:  [['#1a0820','#5a1a30','#2a1010'], false]
+    };
+
+    function drawSky(t) {
+        ctx.clearRect(0,0,W,H);
+        const [stops, showStars] = skyPalettes[currentTheme];
+        const g = ctx.createLinearGradient(0,0,0,H);
+        g.addColorStop(0, stops[0]); g.addColorStop(0.6, stops[1]); g.addColorStop(1, stops[2]);
+        ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
+        if (showStars) {
+            for (const s of stars) {
+                const tw = 0.4 + 0.6*(0.5+0.5*Math.sin(t*s.speed*1000+s.phase));
+                ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+                ctx.fillStyle = `rgba(200,220,255,${s.a*tw})`; ctx.fill();
             }
+        } else if (currentTheme === 'day') {
+            // Fluffy clouds
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            [[80,60,90,35],[300,80,130,45],[600,50,100,38],[900,70,120,42],[1200,55,110,40]].forEach(([x,y,w,h])=>{
+                ctx.beginPath(); ctx.ellipse(x,y,w,h,0,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(x-w*0.3,y+8,w*0.6,h*0.7,0,0,Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(x+w*0.3,y+5,w*0.5,h*0.65,0,0,Math.PI*2); ctx.fill();
+            });
+        } else {
+            // Dusk horizon glow
+            const hg = ctx.createLinearGradient(0, H*0.4, 0, H*0.8);
+            hg.addColorStop(0,'transparent');
+            hg.addColorStop(0.5,'rgba(255,80,20,0.25)');
+            hg.addColorStop(1,'rgba(255,120,40,0.4)');
+            ctx.fillStyle = hg; ctx.fillRect(0,0,W,H);
         }
+    }
 
-        // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            document.querySelector('.dark-mode-toggle').textContent = '☀️';
-        }
-    </script>
+    window.addEventListener('resize', ()=>{ resize(); initStars(); });
+    resize(); initStars();
+    (function loop(t){ drawSky(t*0.001); requestAnimationFrame(loop); })(0);
+
+    // ── Treeline colour per theme ──
+    const treeGrads = {
+        night: ['#0f2614','#030810'],
+        day:   ['#1a5c20','#2d8a38'],
+        dusk:  ['#3a1010','#1a0808']
+    };
+    function updateTreeline() {
+        const [top, bot] = treeGrads[currentTheme];
+        document.querySelector('#treeline #treeGrad stop:first-child').setAttribute('stop-color', top);
+        document.querySelector('#treeline #treeGrad stop:last-child').setAttribute('stop-color', bot);
+    }
+
+    // ── Fireflies (night only) ──
+    const fireflies = [];
+    for(let i=0;i<12;i++){
+        const ff=document.createElement('div');
+        ff.className='firefly'; document.body.appendChild(ff); fireflies.push(ff);
+        (function anim(el){
+            const x=Math.random()*window.innerWidth, y=window.innerHeight*0.5+Math.random()*window.innerHeight*0.4, d=3000+Math.random()*5000;
+            el.animate([{left:x+'px',top:y+'px',opacity:0},{left:(x+(Math.random()-.5)*80)+'px',top:(y+(Math.random()-.5)*50)+'px',opacity:.9,offset:.3},{left:(x+(Math.random()-.5)*120)+'px',top:(y+(Math.random()-.5)*70)+'px',opacity:.5,offset:.7},{left:(x+(Math.random()-.5)*160)+'px',top:(y+(Math.random()-.5)*90)+'px',opacity:0}],{duration:d,fill:'forwards'}).onfinish=()=>anim(el);
+        })(ff);
+    }
+    function setFireflies(show) {
+        fireflies.forEach(f => f.style.visibility = show ? 'visible' : 'hidden');
+    }
+
+    // ── Shooting stars (night only) ──
+    let shootEnabled = true;
+    function shoot() {
+        if (!shootEnabled) { setTimeout(shoot, 5000+Math.random()*6000); return; }
+        const el = document.createElement('div');
+        el.style.cssText = `position:fixed;width:2px;height:80px;background:linear-gradient(to bottom,transparent,#f4c842,transparent);border-radius:2px;pointer-events:none;z-index:1;left:${Math.random()*window.innerWidth*0.8}px;top:${Math.random()*window.innerHeight*0.35}px;`;
+        const a = 30+Math.random()*25;
+        document.body.appendChild(el);
+        el.animate([{opacity:0,transform:`rotate(${a}deg) translateY(0)`},{opacity:1,transform:`rotate(${a}deg) translateY(40px)`},{opacity:0,transform:`rotate(${a}deg) translateY(160px)`}],{duration:800,easing:'ease-in'}).onfinish=()=>el.remove();
+        setTimeout(shoot, 4000+Math.random()*7000);
+    }
+    setTimeout(shoot, 2000);
+
+    // ── Theme cycle: night → day → dusk → night ──
+    const themes = ['night','day','dusk'];
+    const themeEmoji   = { night:'🌙', day:'☀️', dusk:'🌅' };
+    const themeTagline = {
+        night: 'A record of all that has changed beneath these stars',
+        day:   'A record of all that has changed beneath the open sky',
+        dusk:  'A record of all that has changed at the edge of twilight'
+    };
+    const themeEyebrow = {
+        night: 'The Ancient Grove',
+        day:   'The Sunlit Grove',
+        dusk:  'The Twilight Grove'
+    };
+
+    function applyTheme(t) {
+        document.body.classList.remove('night','day','dusk');
+        document.body.classList.add(t);
+        document.getElementById('themeBtn').textContent = themeEmoji[t];
+        document.getElementById('tagline').textContent = themeTagline[t];
+        document.getElementById('eyebrow').textContent = themeEyebrow[t];
+        document.getElementById('cel-night').style.display = t==='night' ? '' : 'none';
+        document.getElementById('cel-day').style.display   = t==='day'   ? '' : 'none';
+        document.getElementById('cel-dusk').style.display  = t==='dusk'  ? '' : 'none';
+        setFireflies(t === 'night');
+        shootEnabled = (t === 'night');
+        updateTreeline();
+        currentTheme = t;
+        localStorage.setItem('theme', t);
+    }
+
+    function cycleTheme() {
+        const idx = themes.indexOf(currentTheme);
+        applyTheme(themes[(idx+1) % themes.length]);
+    }
+
+    // Load saved theme
+    const saved = localStorage.getItem('theme') || 'night';
+    applyTheme(saved);
+</script>
 </body>
 </html>
